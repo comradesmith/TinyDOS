@@ -235,13 +235,15 @@ class Directory:
 			# now we have the index of an empty slot in our list of children
 			self.children[i] = child
 			self.spareslots -= 1
-
 			self.commit()
 		else:
 		# expand dir
 			if self.rootflag:
 			# expansion failed because we are root
 				raise TinyException("Root cannot contain more than 6 children")
+			if len(self.blocks) == Volume.MAX_BLOCKS:
+			# expansion failed, already max size
+				raise TinyException("Directories cannot be larger than " + str(Volume.MAX_BLOCKS) + " blocks")
 			self.expand()
 			self.addchild(child)
 
